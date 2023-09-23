@@ -1,0 +1,52 @@
+name: Integration
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [ 16.x, 18.x ]
+    steps:
+      - uses: actions/checkout@v3
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: 'npm'
+      - run: npm i
+      - run: npm run build
+  e2e-testing:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [ 16.x, 18.x ]
+    steps:
+      - uses: actions/checkout@v3
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: 'npm'
+      - run: npm i
+      - run: npm run test:e2e
+        env:
+          DATABASE_URL: ${{secrets.DATABASE_URL}}
+          AWS_REGION: ${{secrets.AWS_REGION}}
+          AWS_ACCESS_KEY: ${{secrets.AWS_ACCESS_KEY}}
+          AWS_SECRET_ACCESS_KEY: ${{secrets.AWS_SECRET_ACCESS_KEY}}
+          ACCESS_TOKEN_SECRET: ${{secrets.ACCESS_TOKEN_SECRET}}
+          REFRESH_TOKEN_SECRET: ${{secrets.REFRESH_TOKEN_SECRET}}
+          PRODUCT_KEY_SECRET: ${{secrets.PRODUCT_KEY_SECRET}}
+          GOOGLE_CLIENT_ID: ${{secrets.GOOGLE_CLIENT_ID}}
+          GOOGLE_CLIENT_SECRET: ${{secrets.GOOGLE_CLIENT_SECRET}}
+          AWS_BUCKET_NAME: ${{secrets.AWS_BUCKET_NAME}}
+          NODEMAILER_EMAIL: ${{secrets.NODEMAILER_EMAIL}}
+          REDIS_CACHE_HOST: ${{secrets.REDIS_CACHE_HOST}}
+          REDIS_CACHE_SECRET: ${{secrets.REDIS_CACHE_SECRET}}
+          REDIS_CACHE_USERNAME: ${{secrets.REDIS_CACHE_USERNAME}}
+          REDIS_CACHE_PORT: ${{secrets.REDIS_CACHE_PORT}}
+          PRODUCT_KEY_STRING: ${{secrets.PRODUCT_KEY_STRING}}

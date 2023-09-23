@@ -1,0 +1,3 @@
+-- AlterTable
+ALTER TABLE "Singer" ALTER COLUMN "info" DROP NOT NULL,
+ALTER COLUMN "type" DROP NOT NULL;
