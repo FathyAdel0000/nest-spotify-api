@@ -69,7 +69,7 @@ describe('AppController (e2e)', () => {
       .expect(201)
       .send({
         username: 'fathy adel',
-        email: process.env.TEST_EMAIL,
+        email: 'fa1733029@gmail.com',
         password: 'stefan123@ME',
       });
     userData.userId = response.body.id;
@@ -93,7 +93,7 @@ describe('AppController (e2e)', () => {
       .post('/auth/login')
       .expect(201)
       .send({
-        email: process.env.TEST_EMAIL,
+        email: 'fa1733029@gmail.com',
         password: 'stefan123@ME',
       });
     await prisma.user.update({
