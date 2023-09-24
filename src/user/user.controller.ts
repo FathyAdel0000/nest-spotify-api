@@ -8,6 +8,7 @@ import {
   ParseIntPipe,
   Put,
   Query,
+  Res,
   UploadedFile,
   UseGuards,
   UseInterceptors,
@@ -21,6 +22,7 @@ import { AtGuard } from 'src/auth/guard/at.guard';
 import { RoleGuard } from 'src/auth/guard/role.guard';
 import { Roles } from 'src/auth/decorator/roles.decorator';
 import { JwtPayload, UserDecorator } from 'src/auth/decorator/user.decorator';
+import { Response } from 'express';
 
 @Controller('users')
 export class UserController {
@@ -52,6 +54,16 @@ export class UserController {
     @UserDecorator() decodedUser: JwtPayload,
   ): Promise<UserResponse> {
     return this.userService.update(userId, userData, file, decodedUser);
+  }
+
+  @Put('reset-role/:userId')
+  @UseGuards(RoleGuard)
+  @Roles(Role.ADMIN)
+  async resetRole(
+    @Param('userId') userId: string,
+    @Res() response: Response,
+  ): Promise<void> {
+    return this.userService.resetRole(userId, response);
   }
 
   @Delete(':userId')

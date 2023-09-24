@@ -3,7 +3,7 @@
 /node_modules
 
 .env
-plan.txt
+Readme.txt
 
 # Logs
 logs

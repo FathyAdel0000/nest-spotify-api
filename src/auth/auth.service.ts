@@ -116,6 +116,9 @@ export class AuthService {
     if (!user) {
       throw new ForbiddenException('Token is not valid');
     }
+    if (user.confirmed) {
+      throw new ForbiddenException('User is already confirmed');
+    }
     await this.commonService.findUserById(decodedUser.id);
     await this.prisma.user.update({
       where: { id: decodedUser.id },
