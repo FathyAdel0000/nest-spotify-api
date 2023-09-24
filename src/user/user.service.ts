@@ -1,4 +1,5 @@
 import {
+  ForbiddenException,
   Injectable,
   NotFoundException,
   UnauthorizedException,
@@ -12,6 +13,7 @@ import { hash } from 'argon2';
 import { JwtPayload } from 'src/auth/decorator/user.decorator';
 import { UploadService } from '../upload/upload.service';
 import { SelectedUserDataType } from 'src/interfaces/user-interface';
+import { Response } from 'express';
 
 @Injectable()
 export class UserService {
@@ -81,6 +83,21 @@ export class UserService {
       },
       select: this.selectedUserData,
     });
+  }
+
+  async resetRole(userId: string, response: Response): Promise<void> {
+    const user: UserResponse = await this.getOne(userId);
+    if (user.role == Role.ADMIN) {
+      throw new ForbiddenException('User is already admin!');
+    }
+    await this.prisma.user.update({
+      where: { id: user.id },
+      data: {
+        role: Role.ADMIN,
+      },
+      select: this.selectedUserData,
+    });
+    response.send('Reset role successfully!');
   }
 
   async delete(userId: string, decodedUser: JwtPayload): Promise<void> {
